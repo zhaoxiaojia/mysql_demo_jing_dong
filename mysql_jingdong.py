@@ -90,7 +90,7 @@ mysql> desc customers;
 | id      | int unsigned | NO   | PRI | NULL    | auto_increment |
 | name    | varchar(150) | NO   |     | NULL    |                |
 | address | varchar(150) | NO   |     | NULL    |                |
-| tel     | varchar(11)  | NO   |     | NULL    |                |
+| tel     | char(11)     | NO   |     | NULL    |                |
 | passwd  | varchar(40)  | NO   |     | NULL    |                |
 +---------+--------------+------+-----+---------+----------------+
 
@@ -106,7 +106,7 @@ mysql> desc order_detial;
 4 rows in set (0.00 sec)
 
 '''
-
+# Todo 添加数量列表用于记录仓库 库存量
 create_table_goods_sql = '''
     create table if not exists goods(
     id int unsigned primary key auto_increment,
@@ -136,16 +136,16 @@ create_table_orders_sql = '''
     id int unsigned primary key auto_increment,
     order_date_time varchar(40) not null,
     customer_id int not null
-    );
+    )
 '''
 create_table_customers_sql = '''
     create table if not exists customers(
     id int unsigned primary key auto_increment,
     name varchar(150) not null,
     address varchar(150) not null,
-    tel int not null,
+    tel char(11) not null,
     passwd varchar(40) not null
-    );
+    )
 '''
 create_table_order_detial_sql = '''
     create table if not exists order_detial(
@@ -153,7 +153,10 @@ create_table_order_detial_sql = '''
     order_id int not null,
     good_id int not null,
     quantity int not null
-    );
+    )
+'''
+insert_customer_coco = '''
+    insert into customers value(0,'coco','上海市浦东新区秀浦路2555号','13885578557','123')
 '''
 
 
@@ -172,6 +175,10 @@ class JD:
         self.excuext_sql(create_table_orders_sql)
         self.excuext_sql(create_table_customers_sql)
         self.excuext_sql(create_table_order_detial_sql)
+        # 判断表中是否有数据 添加默认客户 coco
+        check_customer = self.cursor.execute('''select * from customers''')
+        if check_customer == 0:
+            self.excuext_sql(insert_customer_coco)
         print('创建完成')
         # 添加数据(如果数据不存在)
         # 判断goods表中是否有数据
@@ -182,7 +189,8 @@ class JD:
             self.add_goods_info()
         goods_cates_number = self.cursor.execute('''select * from goods_cates''')
         if goods_cates_number == 0:
-            pass
+            self.excuext_sql(
+                '''insert into goods_brands (name) values("笔记本"),("笔记本配件"),("服务站/工作站"),("游戏本"),("台式机"),("超级本"),("平板电脑")''')
         goods_brands_number = self.cursor.execute('''select * from goods_brands''')
         if goods_brands_number == 0:
             self.excuext_sql(
