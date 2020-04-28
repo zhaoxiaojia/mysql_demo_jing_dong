@@ -190,7 +190,7 @@ class JD:
         goods_cates_number = self.cursor.execute('''select * from goods_cates''')
         if goods_cates_number == 0:
             self.excuext_sql(
-                '''insert into goods_brands (name) values("笔记本"),("笔记本配件"),("服务站/工作站"),("游戏本"),("台式机"),("超级本"),("平板电脑")''')
+                '''insert into goods_cates (name) values("笔记本"),("笔记本配件"),("服务站/工作站"),("游戏本"),("台式机"),("超级本"),("平板电脑")''')
         goods_brands_number = self.cursor.execute('''select * from goods_brands''')
         if goods_brands_number == 0:
             self.excuext_sql(
